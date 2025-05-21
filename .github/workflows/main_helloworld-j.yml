@@ -41,23 +41,13 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
       
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_ECCF49B82E414DC9B740D94FF2226DAF }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D511E47D640E4DC28EF5D40993589779 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A343AFCB32C34D06BB65B9C870573D8A }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -65,4 +55,4 @@ jobs:
           app-name: 'helloworld-j'
           slot-name: 'Production'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3856B699746D473694C57FD3169CBFE4 }}
